@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscador con Sugerencias</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .search-container {
+            position: relative;
+            width: 300px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-top: none;
+            background: #fff;
+            border-radius: 0 0 4px 4px;
+            z-index: 10;
+        }
+        .suggestion-item {
+            padding: 10px;
+            cursor: pointer;
+        }
+        .suggestion-item:hover {
+            background: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <div class="search-container">
+        <input type="text" id="search" placeholder="Buscar...">
+        <div class="suggestions" id="suggestions"></div>
+    </div>
+
+    <script>
+        const data = ["Colombia", "Argentina", "Brasil", "Chile", "Ecuador", "Perú", "Venezuela", "Uruguay", "Paraguay"];
+        const searchInput = document.getElementById("search");
+        const suggestionsContainer = document.getElementById("suggestions");
+
+        searchInput.addEventListener("input", () => {
+            const query = searchInput.value.toLowerCase();
+            suggestionsContainer.innerHTML = ""; // Limpiar sugerencias previas
+
+            if (query) {
+                const filteredData = data.filter(item => item.toLowerCase().includes(query));
+
+                filteredData.forEach(item => {
+                    const div = document.createElement("div");
+                    div.textContent = item;
+                    div.classList.add("suggestion-item");
+
+                    // Al hacer clic en una sugerencia
+                    div.addEventListener("click", () => {
+                        searchInput.value = item; // Colocar la sugerencia en el input
+                        suggestionsContainer.innerHTML = ""; // Limpiar sugerencias
+                    });
+
+                    suggestionsContainer.appendChild(div);
+                });
+            }
+        });
+
+        // Cierra las sugerencias si el usuario hace clic fuera
+        document.addEventListener("click", (e) => {
+            if (!e.target.closest(".search-container")) {
+                suggestionsContainer.innerHTML = "";
+            }
+        });
+    </script>
+</body>
+</html>
